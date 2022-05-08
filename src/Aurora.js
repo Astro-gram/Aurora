@@ -2,8 +2,13 @@
 
 import Stage from "./Stage.js";
 import Loader from "./Loader.js";
+import Spritesheet from "./Spritesheet.js";
+
+import { Sound } from "./Utils.js";
 
 export default {
     Stage,
-    Loader
+    Loader,
+    Spritesheet,
+    Sound
 };

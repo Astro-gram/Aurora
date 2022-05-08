@@ -1,16 +1,12 @@
 import Aurora from "../src/Aurora.js";
+import * as constants from "./constants.js";
 
-let stage = new Aurora.Stage("game", {
-    w: 1000,
-    h: 400
-});
-
-const srcMap = [
-    { src: "test.png", id: "backpack" }
-]
-
-let loader = new Aurora.Loader(srcMap, "../game/");
+const stage = new Aurora.Stage("game", constants.stageBounds);
+const loader = new Aurora.Loader(constants.srcMap, constants.parentFolder);
+const sounds = new Aurora.Sound(constants.audioMap);
 
 loader.process().then(() => {
     stage.ctx.drawImage(loader.getImage("backpack"), 10, 10);
 })
+
+sounds.play("test");
