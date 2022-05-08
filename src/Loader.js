@@ -19,7 +19,10 @@ export default class Loader {
     }
 
     getImage(id) {
-        if (!this.#processed) return console.error("Images have not been processed yet.");
+        if (!this.#processed) {
+            console.error("Images have not been processed yet.");
+            return;
+        }
 
         const image = this.#convertedSrcMap.filter(src => src.id === id);
 
