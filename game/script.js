@@ -2,7 +2,7 @@ import Aurora from "../src/Aurora.js";
 import * as constants from "./constants.js";
 
 const stage = new Aurora.Stage("game", constants.stageBounds);
-const loader = new Aurora.Loader(constants.srcMap, constants.parentFolder);
+const loader = new Aurora.Loader(constants.srcMap, constants.parentFolder, false);
 const sounds = new Aurora.Sound(constants.audioMap);
 
 stage.addEventListener("click", function() {
@@ -28,3 +28,5 @@ Aurora.dispatcher.on("sys:loaderComplete", () => {
 
     console.log(crosses)
 });
+
+loader.process();
