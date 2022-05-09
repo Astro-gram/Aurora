@@ -8,12 +8,12 @@ export default class Loader {
      * @param {String} parentFolder 
      */
 
-    constructor(srcMap, parentFolder) {
+    constructor(srcMap, parentFolder, processOnInstantiation = true) {
         this.#srcMap = srcMap;
         this.parentFolder = parentFolder;
         this.#convertedSrcMap = [];
         this.#processed = false;
-        this.process();
+        if (processOnInstantiation) this.process();
     }
 
     get srcMap() {
