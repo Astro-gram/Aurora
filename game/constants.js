@@ -4,12 +4,19 @@ const stageBounds = {
 };
 
 const srcMap = [
-    { src: "test.png", id: "backpack" }
-]
+    {
+        src: "test.png",
+        id: "backpack"
+    },
+    {
+        src: "test2.png",
+        id: "x"
+    }
+];
 
 const audioMap = {
     test: "audio.wav"
-}
+};
 
 const parentFolder = "../game/";
 

@@ -2,13 +2,19 @@
 
 import Stage from "./Stage.js";
 import Loader from "./Loader.js";
-import Spritesheet from "./Spritesheet.js";
+import Sprite from "./Sprite.js";
+import Dispatcher from "./Dispatcher.js";
 
-import { Sound } from "./Utils.js";
+import { Sound } from "./Sound.js";
+
+const dispatcher = new Dispatcher();
+
+window.dispatcher = dispatcher;
 
 export default {
     Stage,
     Loader,
-    Spritesheet,
-    Sound
+    Sprite,
+    Sound,
+    dispatcher
 };

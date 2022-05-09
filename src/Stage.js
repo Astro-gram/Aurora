@@ -1,6 +1,21 @@
 export default class Stage {
+    static stageCreated = false;
+
+    /**
+     * @param {String} name 
+     * @param {Object} bounds 
+     * @param {String} parent 
+     */
+
     constructor(name, bounds, parent = "body") {
+        if (Stage.stageCreated) {
+            console.error("Stage is already created.");
+            return;
+        }
+
         this.#canvasInit(name, bounds, parent);
+
+        Stage.stageCreated = true;
     }
 
     #canvasInit(name, bounds, parent) {
@@ -14,5 +29,14 @@ export default class Stage {
         this.ctx = canvas.getContext("2d");
 
         document.querySelector(parent).appendChild(canvas);
+    }
+
+    /**
+     * @param {String} event 
+     * @param {Function} cb 
+     */
+
+    addEventListener(event, cb) {
+        this.canvas.addEventListener(event, cb);
     }
 }

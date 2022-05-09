@@ -3,11 +3,17 @@ export default class Loader {
     #convertedSrcMap
     #processed
 
+    /**
+     * @param {Object} srcMap 
+     * @param {String} parentFolder 
+     */
+
     constructor(srcMap, parentFolder) {
         this.#srcMap = srcMap;
         this.parentFolder = parentFolder;
         this.#convertedSrcMap = [];
         this.#processed = false;
+        this.process();
     }
 
     get srcMap() {
@@ -17,6 +23,11 @@ export default class Loader {
     get processed() {
         return this.#processed;
     }
+
+    /**
+     * @param {String} id
+     * @returns {ImageBitmap}
+     */
 
     getImage(id) {
         if (!this.#processed) {
@@ -43,6 +54,7 @@ export default class Loader {
         }
 
         this.#processed = true;
+        dispatcher.dispatch("sys:loaderComplete");
     }
 
     async #createBitmap(imageSrc) {

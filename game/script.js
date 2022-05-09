@@ -5,8 +5,26 @@ const stage = new Aurora.Stage("game", constants.stageBounds);
 const loader = new Aurora.Loader(constants.srcMap, constants.parentFolder);
 const sounds = new Aurora.Sound(constants.audioMap);
 
-loader.process().then(() => {
-    stage.ctx.drawImage(loader.getImage("backpack"), 10, 10);
+stage.addEventListener("click", function() {
+    sounds.playBackground("test", true, true);
 })
 
-sounds.play("test");
+Aurora.dispatcher.on("sys:loaderComplete", () => {
+    const crosses = new Aurora.Sprite({
+        framerate: 1,
+        images: loader.getImage("x"),
+        frameBounds: {
+            width: 32,
+            height: 32
+        },
+    
+        animations: {
+            swap: {
+                frameCount: 4,
+                next: "swap"
+            }
+        }
+    }, "swap");
+
+    console.log(crosses)
+});
