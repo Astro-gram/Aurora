@@ -6,7 +6,7 @@ export default class Sprite {
     #frameBounds
     #animations
     #currentAnimation
-    #images
+    #imagesheet
 
     static numberOfSprites = 0;
 
@@ -22,7 +22,7 @@ export default class Sprite {
         this.#frameBounds = spriteSheet.frameBounds;
         this.#animations = spriteSheet.animations;
 
-        this.#images = spriteSheet.images;
+        this.#imagesheet = spriteSheet.images;
 
         this.#currentAnimation = animation;
 

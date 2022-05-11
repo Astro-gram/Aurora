@@ -1,6 +1,6 @@
 const stageBounds = {
-    w: 1000,
-    h: 400
+    w: 1300,
+    h: 750
 };
 
 const srcMap = [
@@ -11,6 +11,10 @@ const srcMap = [
     {
         src: "test2.png",
         id: "x"
+    },
+    {
+        src: "bigImg.jpg",
+        id: "b"
     }
 ];
 

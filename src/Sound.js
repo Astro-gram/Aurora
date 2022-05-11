@@ -14,8 +14,6 @@ class Sound {
      */
 
     play(id) {
-        console.log(this.audioMap[id])
-
         const audio = new Audio(this.audioMap[id]);
         audio.play();
     }
@@ -32,7 +30,7 @@ class Sound {
         const audio = new Audio(this.audioMap[id]);
         audio.loop = loop;
         audio.play().catch((err) => {
-            console.error(err + "\n\nA common way to solve this problem is to make a start screen with a play button.");
+            console.warn(err + "\n\nA common way to solve this problem is to make a start screen with a play button.");
         });
 
         this.#instantiatedOnce = true;
