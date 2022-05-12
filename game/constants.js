@@ -1,6 +1,6 @@
 const stageBounds = {
-    w: 1300,
-    h: 750
+    width: 1300,
+    height: 750
 };
 
 const srcMap = [
