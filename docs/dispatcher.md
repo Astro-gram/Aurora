@@ -3,22 +3,6 @@
 
 ----
 
-### `sys:*` Prefix
-
-the `sys:*` prefix is used when a operation needs to be completed before the first paint.
-
-<br />
-
-**Example**
-
-All images need to be processed before first paint
-
-```js
-Aurora.dispatcher.on("sys:loaderComplete", CodeAfterLoaderComplete);
-```
-
-----
-
 ### Operations
 
 <br />
@@ -74,3 +58,9 @@ Not Recommended
 ```js
 dispatcher.on("event", callback);
 ```
+
+----
+
+### WARNING
+
+This is for users. Aurora does not use this internally.
