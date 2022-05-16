@@ -15,14 +15,18 @@ export default class Text {
         this.textAlign = "start";
         this.textBaseline = "alphabetic";
 
-        this.#width = 0;
-
         this.x = 0;
         this.y = 0;
     }
 
-    get width() {
-        return this.#width;
+    get metrics() {
+        const ctx = document.createElement("canvas").getContext("2d");
+        ctx.font = this.processedFont;
+        return ctx.measureText(this.text);
+    }
+
+    get processedFont() {
+        return `${this.fontSize.toString()}px ${this.font}`;
     }
 
     /**
@@ -42,7 +46,7 @@ export default class Text {
     _print(ctx) {
         ctx.save();
 
-        ctx.font = `${this.fontSize.toString()}px ${this.font}`;
+        ctx.font = this.processedFont;
 
         ctx.lineWidth = this.strokeWidth;
 
@@ -54,8 +58,6 @@ export default class Text {
 
         if (this.stroke) ctx.strokeText(this.text, this.x, this.y);
         if (this.fill) ctx.fillText(this.text, this.x, this.y);
-
-        this.#width = ctx.measureText(this.text).width;
 
         ctx.restore();
     }

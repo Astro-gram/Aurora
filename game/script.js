@@ -54,7 +54,6 @@ text.textAlign = "center";
 text.x = stage.bounds.width / 2;
 text.y = stage.bounds.height / 2;
 
-
 //CONTAINER
 let character = new Aurora.Container(gun, body);
 character.anchor.x = 500;
@@ -70,6 +69,6 @@ stage.addProp(image, character, text).then(() => {
 //FUNCTION CALLED EACH TICK
 function tick() {
     character.rotation += 1;
-    image.x += 1; 
+    image.x += 1;
     stage.nextFrame();
 }
