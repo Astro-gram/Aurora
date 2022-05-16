@@ -1,32 +1,69 @@
+//EXAMPLE
 import Aurora from "../src/Aurora.js";
-import * as constants from "./constants.js";
 
-const stage = new Aurora.Stage("game", constants.stageBounds);
-const loader = new Aurora.Images(constants.srcMap, constants.parentFolder);
-const sounds = new Aurora.Sound(constants.audioMap);
+const stage = new Aurora.Stage("game", {
+    width: window.innerWidth,
+    height: window.innerHeight
+});
+
+const loader = new Aurora.Images([
+    {
+        src: "example.png",
+        id: "backpack"
+    }
+]);
+
+const sounds = new Aurora.Sound({
+    test: "audio.wav"
+});
+
 
 stage.addEventListener("click", () => {
     stage.pause();
-})
+    sounds.play("test");
+});
 
-stage.addEventListener("mousemove", (e) => {
-    backpack.x = e.clientX - stage.bounds.x;
-    backpack.y = e.clientY - stage.bounds.y;
-})
-
-let backpack = new Aurora.Static(loader.getImage("backpack"), {
-    x: stage.bounds.width / 2,
-    y: stage.bounds.height / 2,
-})
+stage.watchResize();
 
 
-backpack
-    .setFilter("blur", "1px")
-    .setFilter("saturate", "200%")
+//STATIC IMAGE
+let image = new Aurora.Static(loader.getImage("backpack"), {
+    x: 100,
+    y: 100
+});
 
-stage.addProps(backpack);
-stage.start(tick);
+image.anchorCenter();
 
+image.setFilter("opacity", "95%")
+     .setFilter("contrast", "70%")
+     .setFilter("blur", "1px");
+
+
+//SHAPES
+let body = new Aurora.Shape("#00b2e1", "#0085a8", 7);
+body.fill = true;
+body.circle(500, 500, 45);
+
+let gun = new Aurora.Shape("#999999", "#727272", 7);
+gun.fill = true;
+gun.rect(body.center.x, body.center.y - 15, 100, 30);
+
+
+//CONTAINER
+let character = new Aurora.Container(gun, body);
+character.anchor.x = 500;
+character.anchor.y = 500;
+
+
+//ADD PROPS
+stage.addProp(image, character).then(() => {
+    stage.start(tick);
+});
+
+
+//FUNCTION CALLED EACH TICK
 function tick() {
+    character.rotation += 1;
+    image.x += 1; 
     stage.nextFrame();
 }
