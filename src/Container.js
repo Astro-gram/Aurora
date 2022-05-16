@@ -9,7 +9,7 @@ export default class Container {
      */
 
     constructor(...props) {
-        this.#props = checkPropTypes(props, "Container", ["Container"]);
+        this.#props = checkPropTypes(props, "Container", ["Container", "Text"]);
 
         this.x = 0;
         this.y = 0;

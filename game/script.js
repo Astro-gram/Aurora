@@ -20,7 +20,7 @@ const sounds = new Aurora.Sound({
 
 stage.addEventListener("click", () => {
     stage.pause();
-    sounds.play("test");
+    //sounds.play("test");
 });
 
 stage.watchResize();
@@ -48,6 +48,12 @@ let gun = new Aurora.Shape("#999999", "#727272", 7);
 gun.fill = true;
 gun.rect(body.center.x, body.center.y - 15, 100, 30);
 
+//TEXT
+let text = new Aurora.Text("This is an example", "Arial", "blue", 40);
+text.textAlign = "center";
+text.x = stage.bounds.width / 2;
+text.y = stage.bounds.height / 2;
+
 
 //CONTAINER
 let character = new Aurora.Container(gun, body);
@@ -56,7 +62,7 @@ character.anchor.y = 500;
 
 
 //ADD PROPS
-stage.addProp(image, character).then(() => {
+stage.addProp(image, character, text).then(() => {
     stage.start(tick);
 });
 

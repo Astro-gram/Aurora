@@ -5,6 +5,7 @@ import Images from "./Images.js";
 import Dispatcher from "./Dispatcher.js";
 import Sound from "./Sound.js";
 import Container from "./Container.js";
+import Text from "./Text.js";
 
 //Graphics
 import Static from "./graphics/Static.js";
@@ -26,5 +27,6 @@ export default {
     Container,
     Static,
     Shape,
+    Text,
     dispatcher
 };

@@ -2,7 +2,8 @@ const allowedPropTypes = [
     "Sprite",
     "Shape",
     "Static",
-    "Container"
+    "Container",
+    "Text"
 ]
 
 function checkPropTypes(props, className, exclude = []) {
