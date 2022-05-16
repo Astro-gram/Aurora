@@ -2,21 +2,29 @@
 
 import Stage from "./Stage.js";
 import Images from "./Images.js";
-import Sprite from "./Sprite.js";
 import Dispatcher from "./Dispatcher.js";
-import Static from "./Static.js";
+import Sound from "./Sound.js";
+import Container from "./Container.js";
 
-import { Sound } from "./Sound.js";
+//Graphics
+import Static from "./graphics/Static.js";
+import Shape from "./graphics/Shape.js";
+
+/**
+ * import Sprite from "./graphics/Sprite.js";
+ * NOT FINISHED
+ */
+
 
 const dispatcher = new Dispatcher();
-
 window.dispatcher = dispatcher;
 
 export default {
     Stage,
     Images,
-    Sprite,
     Sound,
+    Container,
     Static,
+    Shape,
     dispatcher
 };

@@ -1,0 +1,15 @@
+{
+  "name": "aurora-engine",
+  "version": "1.0.2",
+  "description": "This is a game engine using the HTML Canvas API.",
+  "main": ".",
+  "license": "MIT",
+  "repository": "Astro-gram/Aurora",
+  "keywords": [
+    "game",
+    "aurora-engine",
+    "game engine",
+    "aurora",
+    "astro-gram"
+  ]
+}

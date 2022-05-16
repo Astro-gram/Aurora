@@ -2,19 +2,36 @@ export default class Static {
     #src
     #loaded
     #bitmap
-    #convertedFilters
     #dimensions
     #filters
+    #convertedFilters
+    #promiseFunc
 
     /**
      * @param {String} src 
      * @param {Object} position
+     * @description Draw static images onto the stage.
      */
 
     constructor(src, position) {
         this.#src = src;
         this.x = position.x;
         this.y = position.y;
+
+        this.anchor = {
+            x: this.x,
+            y: this.y
+        };
+
+        this.#loaded = false;
+        this.#bitmap = null;
+
+        this.#dimensions = {};
+
+        this.rotationInRadians = false;
+        this.rotation = 0;
+
+        this.#promiseFunc = null;
 
         this.#filters = {
             blur: "none",
@@ -30,29 +47,72 @@ export default class Static {
         };
 
         this.#convertedFilters = this.#convertFiltersToString(this.filters);
-
-        this.#loaded = false;
-        this.#bitmap = null;
-
-        this.#dimensions = {};
     }
 
     get loaded() {
         return this.#loaded;
     }
 
+    get bounds() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.#dimensions.width,
+            height: this.#dimensions.height,
+        };
+    }
+
     get filters() {
         return this.#filters;
     }
 
-    get bounds() {
-        return {
-            width: this.#dimensions.width,
-            height: this.#dimensions.height,
-            x: this.x,
-            y: this.y
-        };
+    get convertedFilters() {
+        return this.#convertedFilters;
     }
+
+    /**
+     * @param {Number} anchor
+     * @description Anchor x and y to the same value
+     */
+
+     anchorAll(anchor) {
+        this.anchor.x = anchor;
+        this.anchor.y = anchor;
+    }
+
+    /**
+     * @description Anchor to the center of the shape
+     */
+
+    anchorCenter() {
+        if (!this.#loaded) {
+            this.#promiseFunc = this.anchorCenter;
+            return;
+        }
+
+        this.anchor.x = this.x + Math.floor(this.#dimensions.width / 2);
+        this.anchor.y = this.y + Math.floor(this.#dimensions.height / 2);
+    }
+
+    /**
+     * @param {any} prop
+     * @description Anchor to another prop
+     */
+
+    anchorProp(prop) {
+        const otherProp = checkPropTypes([prop], "Static");
+
+        if (otherProp.length <= 0) return;
+
+        this.anchor.x = otherProp[0].x;
+        this.anchor.y = otherProp[0].y;
+    }
+
+    /**
+     * @param {String} name blur, sepia, invert, etc.
+     * @param {String} value 0-100% or 0-infinity pixels
+     * @description Set canvas filters onto image
+     */
 
     setFilter(name, value) {
         if (!(name in this.#filters)) {
@@ -96,6 +156,10 @@ export default class Static {
         return str.replace(/[A-Z]/, `-${str[upperCasePosition].toLowerCase()}`)
     }
 
+    /**
+     * @private
+     */
+
     async _process() {
         return new Promise(res => {
             let image = new Image();
@@ -110,20 +174,30 @@ export default class Static {
                     this.#loaded = true;
                     this.#bitmap = bitmap;
 
+                    if (this.#promiseFunc !== null) this.#promiseFunc();
                     res();
                 })
             }
         })
     }
 
+    /**
+     * @private
+     */
+
     _print(ctx) {
         if (!this.#loaded) {
-            console.error("Interal Error: Images never got processed.");
+            console.error("Interal Error: Image never got processed.");
             return;
         }
 
-        ctx.filter = this.#convertedFilters;
-        ctx.drawImage(this.#bitmap, this.x, this.y);
+        ctx.filter = this.convertedFilters;
+        ctx.translate(this.anchor.x, this.anchor.y);
+        ctx.rotate(this.rotationInRadians ? this.rotation : this.rotation * Math.PI / 180);
+
+        ctx.drawImage(this.#bitmap, this.x - this.anchor.x, this.y - this.anchor.y);
         ctx.filter = "none";
+
+        ctx.setTransform([1, 0, 0, 1, 0, 0]);
     }
 }

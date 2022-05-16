@@ -1,3 +1,5 @@
+import { checkPropTypes } from "./utils.js";
+
 export default class Stage {
     #props
     #running
@@ -14,7 +16,8 @@ export default class Stage {
     /**
      * @param {String} name 
      * @param {Object} bounds 
-     * @param {String} parent 
+     * @param {String} parent
+     * @description This is equalivent to the root of Aurora. All animations, canvas properties, and props are stored and used here.
      */
 
     constructor(name, bounds, parent = "body") {
@@ -78,55 +81,101 @@ export default class Stage {
     }
 
     /**
-     * @param {String} event 
-     * @param {Function} cb 
+     * @param {*} props
+     * @description Add props into the view on the canvas
      */
 
-    addEventListener(event, cb) {
-        this.#canvas.addEventListener(event, cb);
+    addProp(...props) {
+        return new Promise(resolve => {
+            let usedProps = checkPropTypes(props, "Stage");
+
+            this.#propsAdded = true;
+
+            this.#processAllProps(usedProps).then(() => this.#onPropsProcessed(usedProps, resolve));
+        })
     }
 
-    /**
-     * @param {*} props 
-     */
-
-    addProps(...props) {
-        let usedProps = [];
-
-        this.#propsAdded = true;
-
-        //Error checking
-        for (let i = 0; i < props.length; i++) {
-            const propType = props[i].constructor.name;
-
-            if (propType === "Array" && i === 0) {
-                usedProps = props[i];
-                break;
-            }
-
-            if (propType !== "Static" && propType !== "Sprite") {
-                console.warn(`Prop type '${propType}' is not supported.`);
-                continue;
-            }
-
-            usedProps.push(props[i]);
-        }
-
-        this.#props = [...this.#props, ...props];
-
-        this.#processAllProps(usedProps).then(() => this.#onPropsProcessed(usedProps));
-    }
-
-    async #onPropsProcessed(props) {
+    async #onPropsProcessed(props, resolve) {
         this.#props = [...this.#props, ...props];
         dispatcher.dispatch("sys:propsProcessed", props);
+        resolve();
     }
 
     async #processAllProps(props) {
         for (let i = 0; i < props.length; i++) {
+            if (props[i].noProcess) continue;
             await props[i]._process();
         }
     }
+
+    //MICS
+    /**
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @param {Number} width 
+     * @param {Number} height
+     * @description Get the canvas image data
+     * @returns {ImageData}
+     */
+
+    getStageImageData(x, y, width, height) {
+        return this.#ctx.getImageData(x, y, width, height);
+    }
+
+    /**
+     * @param {Function} cb 
+     * @param {Number} debounce Add bounce between each resize event to prevent visual bugs.
+     * @description Watch for window resizing. Will set the canvas width & height to the windows.
+     */
+
+    watchResize(cb = null, debounce = 10) {
+        window.addEventListener("resize", this.#debounce(() => {
+            if (!this.#running) return;
+
+            this.setDimensions(window.innerWidth, window.innerHeight);
+
+            if (cb !== null) cb({
+                width: window.innerWidth,
+                height: window.innerHeight
+            });
+        }, debounce));
+    }
+
+    setDimensions(width, height) {
+        this.#canvas.width = width;
+        this.#canvas.height = height;
+    }
+
+    /**
+     * @param {String} event 
+     * @param {Function} cb
+     * @description Add a regular event listener to the canvas element. (click, mousemove, etc.)
+     */
+
+     addEventListener(event, cb) {
+        this.#canvas.addEventListener(event, cb);
+    }
+
+    #debounce(func, wait, immediate) {
+        let timeout;
+        return function() {
+            let context = this;
+            let args = arguments;
+
+            let later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+
+            let callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
+    //ANIMATION SYSTEM
 
     /**
      * @param {Function} tick Function that is called each tick
@@ -151,6 +200,10 @@ export default class Stage {
         this.#running = true;
     }
 
+    /**
+     * @description Run next frame in animation
+     */
+
     nextFrame() {
         if (!this.#running) {
             console.warn("Aurora has not been started yet.");
@@ -165,6 +218,10 @@ export default class Stage {
 
         this.#requestID = window.requestAnimationFrame(this.#tick);
     }
+
+    /**
+     * @description Pause/unpause animation
+     */
 
     pause() {
         if (!this.#running) {

@@ -2,13 +2,11 @@ export default class Images {
     #srcMap
 
     /**
-     * @param {Object} srcMap 
-     * @param {String} parentFolder 
+     * @param {Object} srcMap
      */
 
-    constructor(srcMap, parentFolder) {
+    constructor(srcMap) {
         this.#srcMap = srcMap;
-        this.parentFolder = parentFolder;
     }
 
     get srcMap() {
@@ -28,7 +26,7 @@ export default class Images {
             return;
         }
 
-        return this.parentFolder.concat(image[0].src);
+        return image[0].src;
     }
 
     /**

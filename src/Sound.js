@@ -1,4 +1,4 @@
-class Sound {
+export default class Sound {
     #instantiatedOnce
 
     /**
@@ -36,5 +36,3 @@ class Sound {
         this.#instantiatedOnce = true;
     }
 }
-
-export { Sound };
