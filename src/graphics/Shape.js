@@ -10,7 +10,7 @@ export default class Shape {
      * @description Draw shapes which can be rotated, moved, and more.
      */
 
-    constructor(fillColor, strokeColor, strokeWidth = 1) {
+    constructor(fillColor = "black", strokeColor = "black", strokeWidth = 1) {
         this.#shapeType = null;
 
         this.anchor = {
@@ -31,6 +31,8 @@ export default class Shape {
         this.width = 0;
         this.height = 0;
         this.radius = 0;
+
+        this.id = null;
 
         this.rotation = 0;
         this.rotationInRadians = false;
@@ -160,6 +162,15 @@ export default class Shape {
             x: otherProp[0].x - this.x,
             y: otherProp[0].y - this.y
         };
+    }
+
+    /**
+     * @description This is a little time-saving function to flip the current stroke and fill settings. (if fill is true, it will set it to false then set stroke to true and visa-versa)
+     */
+
+    flipFillAndStroke() {
+        this.stroke = !this.stroke;
+        this.fill = !this.fill;
     }
 
     /**

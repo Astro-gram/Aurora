@@ -28,6 +28,8 @@ export default class Static {
 
         this.#dimensions = {};
 
+        this.id = null;
+
         this.rotationInRadians = false;
         this.rotation = 0;
 

@@ -50,6 +50,14 @@ export default class Stage {
         return this.#bounds;
     }
 
+    get propCount() {
+        return this.#props.length;
+    }
+
+    get props() {
+        return this.#props;
+    }
+
     #setBounds() {
         const canvasRect = this.#canvas.getBoundingClientRect();
         
@@ -95,6 +103,37 @@ export default class Stage {
         })
     }
 
+    /**
+     * @param {*} prop 
+     * @description Removes prop from the stage
+     */
+
+    deleteProp(prop) {
+        if (!this.#props.includes(prop)) {
+            console.warn(`Prop: '${prop.constructor.name}' has been added to stage.`)
+            return;
+        }
+
+        delete this.#props[this.#props.indexOf(prop)];
+    }
+
+    /**
+     * @description Removes all props from the stage
+     */
+
+    deleteAllProps() {
+        this.#props = [];
+    }
+
+    /**
+     * @param {*} prop 
+     * @returns returns true if prop has been added to the stage; returns false if not
+     */
+
+    hasProp(prop) {
+        return !!(this.#props.includes(prop));
+    }
+
     async #onPropsProcessed(props, resolve) {
         this.#props = [...this.#props, ...props];
         dispatcher.dispatch("sys:propsProcessed", props);
@@ -109,8 +148,8 @@ export default class Stage {
     }
 
     //MICS
+
     /**
-     * 
      * @param {Number} x 
      * @param {Number} y 
      * @param {Number} width 
@@ -125,8 +164,8 @@ export default class Stage {
 
     /**
      * @param {Function} cb 
-     * @param {Number} debounce Add bounce between each resize event to prevent visual bugs.
-     * @description Watch for window resizing. Will set the canvas width & height to the windows.
+     * @param {Number} debounce Add bounce between each resize event to prevent visual bugs
+     * @description Watch for window resizing. Will set the canvas width & height to the windows
      */
 
     watchResize(cb = null, debounce = 10) {
@@ -142,6 +181,12 @@ export default class Stage {
         }, debounce));
     }
 
+    /**
+     * @param {Number} width 
+     * @param {Number} height
+     * @description get the width and height of the canvas element
+     */
+
     setDimensions(width, height) {
         this.#canvas.width = width;
         this.#canvas.height = height;
@@ -150,10 +195,10 @@ export default class Stage {
     /**
      * @param {String} event 
      * @param {Function} cb
-     * @description Add a regular event listener to the canvas element. (click, mousemove, etc.)
+     * @description Add a regular event listener to the canvas element (click, mousemove, etc.)
      */
 
-     addEventListener(event, cb) {
+    addEventListener(event, cb) {
         this.#canvas.addEventListener(event, cb);
     }
 
@@ -237,5 +282,23 @@ export default class Stage {
         }
 
         this.#paused = !this.#paused;
+    }
+
+    /**
+     * @description Stops animation and resets stage to a state as if it was never ran (meaning that all props will stay but it will stop running)
+     */
+
+    kill() {
+        if (!this.#running) {
+            console.warn("Aurora has not been started yet.");
+            return;
+        }
+        
+        window.cancelAnimationFrame(this.#requestID);
+
+        this.#running = false;
+        this.#paused = false;
+        this.tick = null;
+        this.#requestID = null;
     }
 }
